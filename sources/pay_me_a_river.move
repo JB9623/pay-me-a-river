@@ -109,15 +109,15 @@ module overmind::pay_me_a_river {
         if (exists<Payments>(sender_account)) {
             let payment_store = borrow_global_mut<Payments>(sender_account);
 
-            if (!table::contains(&payment_store.streams, sender_account)) {
-                table::add(&mut payment_store.streams, sender_account, Stream {
-                    sender: sender_account,
-                    receiver : receiver_address,
-                    length_in_seconds,
-                    start_time,
-                    coins
-                });
-            };
+            // if (!table::contains(&payment_store.streams, sender_account)) {
+            //     table::add(&mut payment_store.streams, sender_account, Stream {
+            //         sender: sender_account,
+            //         receiver : receiver_address,
+            //         length_in_seconds,
+            //         start_time,
+            //         coins
+            //     });
+            // };
         } else {
             let registry_seed = u128_to_string((timestamp::now_microseconds() as u128));
             string::append(&mut registry_seed, string::utf8(b"pay_me_a_river"));        
@@ -197,6 +197,8 @@ module overmind::pay_me_a_river {
         check_signer_address_is_sender_or_receiver(sender_address, account_address, receiver_address);
 
         let payment_store = borrow_global_mut<Payments>(sender_address);
+        
+        // table::remove(&mut payment_store.streams, sender_address);
         // check_stream_exists(payment_store, sender_address);
 
         // let stream = table::borrow_mut(&mut payment_store.streams, sender_address);
